@@ -410,6 +410,17 @@ where
     }
 }
 
+impl<S> Extend<S::Element> for Fixed<S>
+where
+    S: SliceMut
+{
+    fn extend<T: IntoIterator<Item = S::Element>>(&mut self, iter: T) {
+        for item in iter {
+            self.push(item);
+        }
+    }
+}
+
 ///////////////////////////////
 ///// BOUNDED RING BUFFER /////
 ///////////////////////////////
@@ -863,6 +874,18 @@ where
     #[inline]
     fn index_mut(&mut self, index: usize) -> &mut Self::Output {
         self.get_mut(index).expect("index out of range")
+    }
+}
+
+impl<S> Extend<S::Element> for Bounded<S>
+where 
+    S: SliceMut,
+    S::Element: Copy,
+{
+    fn extend<T: IntoIterator<Item = S::Element>>(&mut self, iter: T) {
+        for item in iter {
+            self.push(item);
+        }
     }
 }
 
